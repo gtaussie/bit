@@ -255,6 +255,16 @@ class SmartbitAPI:
         r = requests.post(cls.TEST_TX_PUSH_API, json={cls.TX_PUSH_PARAM: tx_hex}, timeout=DEFAULT_TIMEOUT)
         return True if r.status_code == 200 else False
 
+class BlockcypherAPI:
+    TEST_ENDPOINT = 'https://api.blockcypher.com/v1/btc/test3/'
+    TEST_TX_PUSH_API = TEST_ENDPOINT + 'txs/push'
+    TX_PUSH_PARAM = 'tx'
+
+    @classmethod
+    def broadcast_tx_testnet(cls, tx_hex):  # pragma: no cover
+        r = requests.post(cls.TEST_TX_PUSH_API, json={cls.TX_PUSH_PARAM: tx_hex}, timeout=DEFAULT_TIMEOUT)
+        return True if r.status_code == 201 else False
+ 
 
 class NetworkAPI:
     IGNORED_ERRORS = (ConnectionError,
@@ -282,7 +292,8 @@ class NetworkAPI:
     GET_UNSPENT_TEST = [BitpayAPI.get_unspent_testnet,  # No limit
                         SmartbitAPI.get_unspent_testnet]  # Limit 1000
     BROADCAST_TX_TEST = [BitpayAPI.broadcast_tx_testnet,
-                         SmartbitAPI.broadcast_tx_testnet]  # Limit 5/minute
+                         SmartbitAPI.broadcast_tx_testnet,
+                         BlockcypherAPI.broadcast_tx_testnet]  # Limit 5/minute
 
     @classmethod
     def get_balance(cls, address):
